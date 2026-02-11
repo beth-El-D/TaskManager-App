@@ -1,0 +1,11 @@
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\bin\Debug\net9.0\TaskManager.Domain.deps.json
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\bin\Debug\net9.0\TaskManager.Domain.dll
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\bin\Debug\net9.0\TaskManager.Domain.pdb
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.AssemblyInfoInputs.cache
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.AssemblyInfo.cs
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.csproj.CoreCompileInputs.cache
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.dll
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\refint\TaskManager.Domain.dll
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.pdb
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\ref\TaskManager.Domain.dll

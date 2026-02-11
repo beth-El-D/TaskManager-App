@@ -1,0 +1,27 @@
+<nav class="top-bar">
+    <div class="left">
+        <button class="hamburger" (click)="toggleMenu()">☰</button>
+    </div>
+
+    <div class="center" [class.open]="menuOpen">
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
+        <a routerLink="/projects" routerLinkActive="active">Projects</a>
+        <a routerLink="/calendar" routerLinkActive="active">Calendar</a>
+        <a routerLink="/focus" routerLinkActive="active">Focus</a>
+        <a routerLink="/analytics" routerLinkActive="active">Analytics</a>
+    </div>
+
+    <div class="right">
+        <button class="theme-toggle" (click)="toggleTheme()">🌗</button>
+
+        <div class="profile" (click)="toggleProfile()">
+            👤
+            <div class="dropdown" *ngIf="profileOpen">
+                <a routerLink="/settings/profile">Profile</a>
+                <a routerLink="/settings/preferences">Preferences</a>
+                <button>Logout</button>
+            </div>
+        </div>
+    </div>
+</nav>

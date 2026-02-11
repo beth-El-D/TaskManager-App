@@ -1,0 +1,134 @@
+.top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+
+    padding: 1rem 2rem;
+    background: rgba(20, 24, 36, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+
+    .left {
+        justify-self: start;
+    }
+
+    .right {
+        justify-self: end;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .hamburger {
+        font-size: 1.5rem;
+        background: none;
+        border: none;
+        color: #fff;
+        display: none;
+    }
+
+    .center {
+        display: flex;
+        justify-content: center;
+        gap: 2.5rem;
+
+        a {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 4px;
+            transition: color .2s ease;
+
+            &::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -6px;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(90deg, #22c55e, #3b82f6);
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform .25s ease;
+            }
+
+            &:hover,
+            &.active {
+                color: #fff;
+
+                &::after {
+                    transform: scaleX(1);
+                }
+            }
+        }
+    }
+
+    .theme-toggle {
+        background: none;
+        border: none;
+        font-size: 1.1rem;
+        cursor: pointer;
+        color: #fff;
+    }
+
+    .profile {
+        position: relative;
+        cursor: pointer;
+
+        .dropdown {
+            position: absolute;
+            right: 0;
+            top: 140%;
+            background: #1e293b;
+            border-radius: 10px;
+            padding: .5rem;
+            display: flex;
+            flex-direction: column;
+            min-width: 140px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .25);
+
+            a,
+            button {
+                background: none;
+                border: none;
+                color: #e5e7eb;
+                padding: .5rem;
+                text-align: left;
+                cursor: pointer;
+
+                &:hover {
+                    background: rgba(255, 255, 255, .08);
+                }
+            }
+        }
+    }
+}
+
+/* 📱 Mobile */
+@media (max-width: 900px) {
+    .hamburger {
+        display: block;
+    }
+
+    .center {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #0f172a;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        padding: 1.2rem;
+        display: none;
+
+        &.open {
+            display: flex;
+        }
+    }
+}
