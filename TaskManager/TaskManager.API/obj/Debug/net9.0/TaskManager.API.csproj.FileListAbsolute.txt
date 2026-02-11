@@ -77,3 +77,7 @@ C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\bin\Debug\net9.
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\bin\Debug\net9.0\TaskManager.Infrastructure.dll
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\bin\Debug\net9.0\TaskManager.Infrastructure.pdb
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\obj\Debug\net9.0\TaskManager.API.sourcelink.json
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll

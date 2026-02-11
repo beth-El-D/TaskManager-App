@@ -13,3 +13,4 @@ C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Infrastructure\obj\
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Infrastructure\obj\Debug\net9.0\refint\TaskManager.Infrastructure.dll
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Infrastructure\obj\Debug\net9.0\TaskManager.Infrastructure.pdb
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Infrastructure\obj\Debug\net9.0\ref\TaskManager.Infrastructure.dll
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Infrastructure\obj\Debug\net9.0\TaskManager.Infrastructure.sourcelink.json

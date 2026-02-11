@@ -9,3 +9,4 @@ C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\ne
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\refint\TaskManager.Domain.dll
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.pdb
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\ref\TaskManager.Domain.dll
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.Domain\obj\Debug\net9.0\TaskManager.Domain.sourcelink.json
