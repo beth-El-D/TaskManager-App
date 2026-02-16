@@ -1,37 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './login.html',
-  styleUrl: './login.scss',
+  imports: [FormsModule],
+  templateUrl: './login.html'
 })
-export class LoginComponent implements OnInit {
-  form!: FormGroup;
+export class Login {
 
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router
-  ) {}
+  email = '';
+  password = '';
 
-  ngOnInit(): void {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
-    });
-  }
+  constructor(private auth: AuthService, private router: Router) {}
 
-  login(): void {
-    if (this.form.valid) {
-      this.auth.login(this.form.value).subscribe((res: any) => {
-        this.auth.saveToken(res.token);
-        this.router.navigate(['/dashboard']);
+  login() {
+    this.auth.login({ email: this.email, password: this.password })
+      .subscribe({
+        next: () => this.router.navigate(['/']),
+        error: () => alert('Invalid credentials')
       });
-    }
   }
 }

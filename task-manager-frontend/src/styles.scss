@@ -19,3 +19,16 @@ body.dark-theme {
     background: #0f172a;
     color: #e5e7eb;
 }
+.auth-container {
+    width: 320px;
+    margin: 100px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input,
+button {
+    padding: 10px;
+    font-size: 14px;
+}

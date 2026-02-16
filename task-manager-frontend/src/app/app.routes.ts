@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { LoginComponent } from './features/auth/login/login';
+import { Login } from './features/auth/login/login';
 import { Register} from './features/auth/register/register';
 import { DashboardHome } from './features/dashboard/dashboard-home/dashboard-home';
 import { TaskList } from './features/tasks/task-list/task-list';
@@ -12,7 +12,7 @@ import { ProfileSettings } from './features/settings/profile-settings/profile-se
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: Login },
   { path: 'register', component: Register },
   { path: 'dashboard', component: DashboardHome, canActivate: [authGuard] },
   { path: 'tasks', component: TaskList },
@@ -22,5 +22,5 @@ export const routes: Routes = [
   { path: 'analytics', component: AnalyticsDashboard },
   { path: 'settings/profile', component: ProfileSettings },
 
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+  { path: '', redirectTo: 'register', pathMatch: 'full' }
 ];

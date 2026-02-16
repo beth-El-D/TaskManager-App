@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private api = 'https://localhost:5001/api/auth';
+  private api = 'http://localhost:5118/api/auth';
 
   constructor(private http: HttpClient) {}
 

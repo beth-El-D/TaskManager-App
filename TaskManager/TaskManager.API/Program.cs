@@ -18,7 +18,23 @@ builder.Services.AddEndpointsApiExplorer();   // 🔹 Required for Swagger
 builder.Services.AddSwaggerGen();             // 🔹 Swagger generator
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4202") // your Angular port
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+
+
 var app = builder.Build();
+
+app.UseCors("AllowAngular");
+
 
 // Configure middleware
 if (app.Environment.IsDevelopment())
@@ -36,5 +52,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.Run();
