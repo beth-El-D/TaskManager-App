@@ -14,13 +14,18 @@ export class Login {
   email = '';
   password = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) { }
 
   login() {
     this.auth.login({ email: this.email, password: this.password })
       .subscribe({
-        next: () => this.router.navigate(['/']),
-        error: () => alert('Invalid credentials')
+        next: (response) => {
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          const errorMessage = error.error || 'Invalid credentials';
+          alert(errorMessage);
+        }
       });
   }
 }

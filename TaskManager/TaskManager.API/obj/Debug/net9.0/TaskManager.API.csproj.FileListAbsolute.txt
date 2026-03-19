@@ -163,3 +163,4 @@ C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\obj\Debug\net9.
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\obj\Debug\net9.0\TaskManager.API.pdb
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\obj\Debug\net9.0\TaskManager.API.genruntimeconfig.cache
 C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\obj\Debug\net9.0\ref\TaskManager.API.dll
+C:\Users\hp\Desktop\Task-Manager-App\TaskManager\TaskManager.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

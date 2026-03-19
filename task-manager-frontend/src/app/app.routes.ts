@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { Login } from './features/auth/login/login';
-import { Register} from './features/auth/register/register';
+import { Register } from './features/auth/register/register';
 import { DashboardHome } from './features/dashboard/dashboard-home/dashboard-home';
 import { TaskList } from './features/tasks/task-list/task-list';
 import { ProjectList } from './features/projects/project-list/project-list';
@@ -15,12 +15,12 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
   { path: 'dashboard', component: DashboardHome, canActivate: [authGuard] },
-  { path: 'tasks', component: TaskList },
-  { path: 'projects', component: ProjectList },
-  { path: 'calendar', component: CalendarView },
-  { path: 'focus', component: FocusPage },
-  { path: 'analytics', component: AnalyticsDashboard },
-  { path: 'settings/profile', component: ProfileSettings },
+  { path: 'tasks', component: TaskList, canActivate: [authGuard] },
+  { path: 'projects', component: ProjectList, canActivate: [authGuard] },
+  { path: 'calendar', component: CalendarView, canActivate: [authGuard] },
+  { path: 'focus', component: FocusPage, canActivate: [authGuard] },
+  { path: 'analytics', component: AnalyticsDashboard, canActivate: [authGuard] },
+  { path: 'settings/profile', component: ProfileSettings, canActivate: [authGuard] },
 
-  { path: '', redirectTo: 'register', pathMatch: 'full' }
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
 ];
