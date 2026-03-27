@@ -5,6 +5,7 @@ using System.Text;
 using TaskManager.Infrastructure.Data;
 using TaskManager.Infrastructure.Security;
 using TaskManager.API.Services;
+using TaskManager.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<TaskService>();
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -48,6 +50,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Add global exception handling middleware
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseCors("AllowAngular");
 

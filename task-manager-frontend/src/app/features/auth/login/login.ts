@@ -23,8 +23,18 @@ export class Login {
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
-          const errorMessage = error.error || 'Invalid credentials';
-          alert(errorMessage);
+          let errorMessage = 'Login failed. Please try again.';
+
+          if (error.error) {
+            if (typeof error.error === 'string') {
+              errorMessage = error.error;
+            } else if (error.error.message) {
+              errorMessage = error.error.message;
+            }
+          }
+
+          // Show user-friendly error message
+          alert('❌ ' + errorMessage);
         }
       });
   }
