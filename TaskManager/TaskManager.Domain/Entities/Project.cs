@@ -5,16 +5,14 @@ public class Project
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
-    public string? Color { get; set; } = "#667eea";
+    public string? Color { get; set; } // Hex color code for UI
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public bool IsCompleted { get; set; } = false;
+    public bool IsCompleted { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    
-    // Foreign Key
     public Guid UserId { get; set; }
     
     // Navigation Properties
     public User User { get; set; } = default!;
-    // Simplified - no navigation to Tasks for now
+    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
 }

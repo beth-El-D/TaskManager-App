@@ -16,6 +16,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TaskService>();
+builder.Services.AddScoped<ProjectService>();
+builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<FocusSessionService>();
+builder.Services.AddScoped<UserGoalService>();
+builder.Services.AddScoped<UserPreferenceService>();
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

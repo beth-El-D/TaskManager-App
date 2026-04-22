@@ -21,6 +21,9 @@ public class AuthService
     public async Task Register(RegisterDto dto)
     {
         // Validate input
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            throw new ValidationException("Name is required.");
+
         if (string.IsNullOrWhiteSpace(dto.Email))
             throw new ValidationException("Email is required.");
 
@@ -40,6 +43,7 @@ public class AuthService
         var user = new User
         {
             Id = Guid.NewGuid(),
+            Name = dto.Name,
             Email = dto.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             CreatedAt = DateTime.UtcNow

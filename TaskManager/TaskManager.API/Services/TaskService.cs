@@ -18,6 +18,8 @@ public class TaskService
     {
         var tasks = await _context.Tasks
             .Where(t => t.UserId == userId)
+            .Include(t => t.Project)
+            .Include(t => t.Category)
             .OrderBy(t => t.DueDate)
             .ToListAsync();
 
@@ -33,6 +35,8 @@ public class TaskService
             Description = dto.Description,
             Priority = dto.Priority,
             DueDate = dto.DueDate,
+            ProjectId = dto.ProjectId,
+            CategoryId = dto.CategoryId,
             UserId = userId,
             CreatedAt = DateTime.UtcNow
         };
@@ -40,12 +44,22 @@ public class TaskService
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
 
+        // Load related entities for response
+        await _context.Entry(task)
+            .Reference(t => t.Project)
+            .LoadAsync();
+        await _context.Entry(task)
+            .Reference(t => t.Category)
+            .LoadAsync();
+
         return MapToResponseDto(task);
     }
 
     public async Task<TaskResponseDto?> UpdateTaskAsync(Guid userId, Guid taskId, UpdateTaskDto dto)
     {
         var task = await _context.Tasks
+            .Include(t => t.Project)
+            .Include(t => t.Category)
             .FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
 
         if (task == null) return null;
@@ -64,6 +78,12 @@ public class TaskService
 
         if (dto.DueDate.HasValue)
             task.DueDate = dto.DueDate.Value;
+
+        if (dto.ProjectId.HasValue)
+            task.ProjectId = dto.ProjectId.Value;
+
+        if (dto.CategoryId.HasValue)
+            task.CategoryId = dto.CategoryId.Value;
 
         if (dto.IsCompleted.HasValue)
         {
@@ -98,12 +118,22 @@ public class TaskService
 
         var allTasks = await _context.Tasks
             .Where(t => t.UserId == userId)
+            .Include(t => t.Project)
+            .Include(t => t.Category)
             .ToListAsync();
 
         var overdueTasks = allTasks.Where(t => t.DueDate < today && !t.IsCompleted).ToList();
         var todayTasks = allTasks.Where(t => t.DueDate >= today && t.DueDate < tomorrow).ToList();
         var upcomingTasks = allTasks.Where(t => t.DueDate >= tomorrow && !t.IsCompleted).ToList();
         var completedToday = allTasks.Where(t => t.CompletedAt?.Date == today).Count();
+
+        // Calculate weekly progress
+        var weeklyProgress = GetWeeklyProgress(allTasks);
+
+        // Calculate task completion trend
+        var lastWeekCompleted = allTasks.Where(t => t.CompletedAt?.Date >= today.AddDays(-7) && t.CompletedAt?.Date < today).Count();
+        var thisWeekCompleted = allTasks.Where(t => t.CompletedAt?.Date >= today.AddDays(-7)).Count();
+        var completionTrend = lastWeekCompleted > 0 ? ((thisWeekCompleted - lastWeekCompleted) * 100 / lastWeekCompleted) : 0;
 
         return new DashboardStatsDto
         {
@@ -112,8 +142,38 @@ public class TaskService
             UpcomingTasks = upcomingTasks.Take(5).Select(MapToResponseDto).ToList(),
             TotalTasksToday = todayTasks.Count,
             CompletedToday = completedToday,
-            OverdueCount = overdueTasks.Count
+            OverdueCount = overdueTasks.Count,
+            WeeklyProgress = weeklyProgress,
+            CompletionTrend = completionTrend
         };
+    }
+
+    private List<WeeklyProgressDto> GetWeeklyProgress(List<TaskItem> allTasks)
+    {
+        var today = DateTime.Today;
+        var weeklyProgress = new List<WeeklyProgressDto>();
+
+        // Get last 7 days
+        for (int i = 6; i >= 0; i--)
+        {
+            var date = today.AddDays(-i);
+            var dayTasks = allTasks.Where(t => t.DueDate.Date == date).ToList();
+            var completedTasks = dayTasks.Where(t => t.IsCompleted).Count();
+            var totalTasks = dayTasks.Count;
+            var completionRate = totalTasks > 0 ? (completedTasks * 100 / totalTasks) : 0;
+
+            weeklyProgress.Add(new WeeklyProgressDto
+            {
+                Date = date,
+                DayName = date.ToString("ddd").Substring(0, 1), // M, T, W, etc.
+                CompletionRate = completionRate,
+                TotalTasks = totalTasks,
+                CompletedTasks = completedTasks,
+                IsToday = date == today
+            });
+        }
+
+        return weeklyProgress;
     }
 
     private TaskResponseDto MapToResponseDto(TaskItem task)
@@ -129,7 +189,13 @@ public class TaskService
             IsCompleted = task.IsCompleted,
             CreatedAt = task.CreatedAt,
             CompletedAt = task.CompletedAt,
-            UserId = task.UserId
+            UserId = task.UserId,
+            ProjectId = task.ProjectId,
+            CategoryId = task.CategoryId,
+            ProjectName = task.Project?.Name,
+            CategoryName = task.Category?.Name,
+            ProjectColor = task.Project?.Color,
+            CategoryColor = task.Category?.Color
         };
     }
 }
@@ -142,4 +208,16 @@ public class DashboardStatsDto
     public int TotalTasksToday { get; set; }
     public int CompletedToday { get; set; }
     public int OverdueCount { get; set; }
+    public List<WeeklyProgressDto> WeeklyProgress { get; set; } = new();
+    public int CompletionTrend { get; set; }
+}
+
+public class WeeklyProgressDto
+{
+    public DateTime Date { get; set; }
+    public string DayName { get; set; } = string.Empty;
+    public int CompletionRate { get; set; }
+    public int TotalTasks { get; set; }
+    public int CompletedTasks { get; set; }
+    public bool IsToday { get; set; }
 }

@@ -1,1 +1,208 @@
-<p>calendar-view works!</p>
+<div class="calendar-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <h1>Calendar</h1>
+            <p class="subtitle">View and manage your tasks by date</p>
+        </div>
+        <button class="btn-create" (click)="openCreateModal()">
+            <span class="icon">+</span>
+            New Task
+        </button>
+    </div>
+
+    <!-- Calendar Controls -->
+    <div class="calendar-controls">
+        <div class="month-navigation">
+            <button class="nav-btn" (click)="previousMonth()">
+                <span>‹</span>
+            </button>
+            <h2 class="month-year">{{ getMonthYear() }}</h2>
+            <button class="nav-btn" (click)="nextMonth()">
+                <span>›</span>
+            </button>
+        </div>
+
+        <div class="view-controls">
+            <button class="btn-today" (click)="goToToday()">Today</button>
+            <!-- Future: Add view mode toggles -->
+            <!-- <div class="view-mode-toggle">
+        <button [class.active]="viewMode === 'month'" (click)="viewMode = 'month'">Month</button>
+        <button [class.active]="viewMode === 'week'" (click)="viewMode = 'week'">Week</button>
+        <button [class.active]="viewMode === 'day'" (click)="viewMode = 'day'">Day</button>
+      </div> -->
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading calendar...</p>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div *ngIf="!loading" class="calendar-wrapper">
+        <!-- Week Days Header -->
+        <div class="calendar-header">
+            <div *ngFor="let day of weekDays" class="weekday-header">
+                {{ day }}
+            </div>
+        </div>
+
+        <!-- Calendar Days -->
+        <div class="calendar-grid">
+            <div *ngFor="let day of calendarDays; trackBy: trackByTaskId" class="calendar-day"
+                [class.other-month]="!day.isCurrentMonth" [class.today]="day.isToday"
+                [class.has-tasks]="day.tasks.length > 0" [class.has-overdue]="hasOverdueTasks(day)"
+                (click)="selectDay(day)">
+                <div class="day-header">
+                    <span class="day-number">{{ day.date.getDate() }}</span>
+                    <span class="task-count" *ngIf="day.tasks.length > 0">
+                        {{ day.tasks.length }}
+                    </span>
+                </div>
+
+                <div class="day-tasks">
+                    <div *ngFor="let task of day.tasks.slice(0, 3); trackBy: trackByTaskId" class="task-preview"
+                        [class.completed]="task.isCompleted" [class]="getPriorityClass(task.priority)"
+                        [title]="task.title">
+                        <span class="task-dot" [style.background-color]="task.projectColor || '#6366f1'"></span>
+                        <span class="task-title">{{ task.title }}</span>
+                    </div>
+                    <div *ngIf="day.tasks.length > 3" class="more-tasks">
+                        +{{ day.tasks.length - 3 }} more
+                    </div>
+                </div>
+
+                <button class="add-task-btn" (click)="openCreateModal(day); $event.stopPropagation()" title="Add task">
+                    +
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Details Modal -->
+    <div class="modal" *ngIf="showTaskModal && selectedDay" (click)="showTaskModal = false">
+        <div class="modal-content task-details-modal" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <h2>{{ selectedDay.date | date:'EEEE, MMMM d, y' }}</h2>
+                    <p class="task-summary">
+                        {{ selectedDay.tasks.length }} task{{ selectedDay.tasks.length !== 1 ? 's' : '' }}
+                        <span *ngIf="getCompletedTaskCount(selectedDay) > 0">
+                            ({{ getCompletedTaskCount(selectedDay) }} completed)
+                        </span>
+                    </p>
+                </div>
+                <button class="btn-close" (click)="showTaskModal = false">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="task-list">
+                    <div *ngFor="let task of selectedDay.tasks; trackBy: trackByTaskId" class="task-item"
+                        [class.completed]="task.isCompleted">
+                        <div class="task-checkbox">
+                            <input type="checkbox" [checked]="task.isCompleted" (change)="toggleTask(task.id)"
+                                class="checkbox">
+                        </div>
+
+                        <div class="task-content">
+                            <h4 class="task-title">{{ task.title }}</h4>
+                            <p class="task-description" *ngIf="task.description">{{ task.description }}</p>
+
+                            <div class="task-meta">
+                                <span class="badge" [class]="getPriorityClass(task.priority)">
+                                    {{ task.priority }}
+                                </span>
+                                <span class="badge project-badge" *ngIf="task.projectName"
+                                    [style.background-color]="task.projectColor">
+                                    {{ task.projectName }}
+                                </span>
+                                <span class="badge category-badge" *ngIf="task.categoryName"
+                                    [style.background-color]="task.categoryColor">
+                                    {{ task.categoryName }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <button class="btn-delete" (click)="deleteTask(task.id)" title="Delete task">
+                            🗑️
+                        </button>
+                    </div>
+
+                    <div *ngIf="selectedDay.tasks.length === 0" class="empty-state">
+                        <p>No tasks for this day</p>
+                    </div>
+                </div>
+
+                <button class="btn-add-task" (click)="openCreateModal(selectedDay); showTaskModal = false">
+                    <span>+</span> Add Task for This Day
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Task Modal -->
+    <div class="modal" *ngIf="showCreateModal" (click)="showCreateModal = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Create New Task</h2>
+                <button class="btn-close" (click)="showCreateModal = false">×</button>
+            </div>
+
+            <form (ngSubmit)="createTask()">
+                <div class="form-group">
+                    <label>Task Title *</label>
+                    <input type="text" [(ngModel)]="newTask.title" name="title" placeholder="Enter task title"
+                        class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea [(ngModel)]="newTask.description" name="description" placeholder="Enter task description"
+                        class="form-textarea" rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select [(ngModel)]="newTask.priority" name="priority" class="form-select">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" [(ngModel)]="newTask.dueDate" name="dueDate" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-row" *ngIf="projects.length > 0 || categories.length > 0">
+                    <div class="form-group" *ngIf="projects.length > 0">
+                        <label>Project</label>
+                        <select [(ngModel)]="newTask.projectId" name="projectId" class="form-select">
+                            <option [value]="null">No Project</option>
+                            <option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" *ngIf="categories.length > 0">
+                        <label>Category</label>
+                        <select [(ngModel)]="newTask.categoryId" name="categoryId" class="form-select">
+                            <option [value]="null">No Category</option>
+                            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" (click)="showCreateModal = false">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -4,7 +4,7 @@ import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { DashboardHome } from './features/dashboard/dashboard-home/dashboard-home';
 import { TaskList } from './features/tasks/task-list/task-list';
-import { ProjectList } from './features/projects/project-list/project-list';
+import { ProjectsComponent } from './features/dashboard/projects/projects';
 import { CalendarView } from './features/calendar/calendar-view/calendar-view';
 import { FocusPage } from './features/focus/focus-page/focus-page';
 import { AnalyticsDashboard } from './features/analytics/analytics-dashboard/analytics-dashboard';
@@ -16,7 +16,7 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'dashboard', component: DashboardHome, canActivate: [authGuard] },
   { path: 'tasks', component: TaskList, canActivate: [authGuard] },
-  { path: 'projects', component: ProjectList, canActivate: [authGuard] },
+  { path: 'projects', component: ProjectsComponent, canActivate: [authGuard] },
   { path: 'calendar', component: CalendarView, canActivate: [authGuard] },
   { path: 'focus', component: FocusPage, canActivate: [authGuard] },
   { path: 'analytics', component: AnalyticsDashboard, canActivate: [authGuard] },

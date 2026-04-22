@@ -60,7 +60,8 @@ export class AuthService {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return {
         id: payload.nameid,
-        email: payload.email
+        email: payload.email,
+        name: payload.name || payload.unique_name || payload.given_name
       };
     } catch {
       return null;

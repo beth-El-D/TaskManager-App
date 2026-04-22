@@ -14,9 +14,14 @@ public class TaskItem
     
     // Foreign Keys
     public Guid UserId { get; set; }
+    public Guid? ProjectId { get; set; } // Optional project assignment
+    public Guid? CategoryId { get; set; } // Optional category assignment
     
     // Navigation Properties
     public User User { get; set; } = default!;
+    public Project? Project { get; set; }
+    public Category? Category { get; set; }
+    public ICollection<FocusSession> FocusSessions { get; set; } = new List<FocusSession>();
 }
 
 public enum Priority

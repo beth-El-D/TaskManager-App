@@ -1,0 +1,123 @@
+<div class="projects-container">
+    <div class="header">
+        <h1>Projects & Categories</h1>
+        <div class="header-actions">
+            <button class="btn-primary" (click)="openProjectModal()">+ New Project</button>
+            <button class="btn-secondary" (click)="openCategoryModal()">+ New Category</button>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <!-- Projects Section -->
+        <div class="section">
+            <h2>Projects</h2>
+            <div class="cards-grid" *ngIf="projects.length > 0; else noProjects">
+                <div *ngFor="let project of projects" class="card" [style.border-left-color]="project.color">
+                    <div class="card-header">
+                        <span class="icon">{{ project.icon }}</span>
+                        <h3>{{ project.name }}</h3>
+                    </div>
+                    <p class="description">{{ project.description || 'No description' }}</p>
+                    <div class="card-footer">
+                        <span class="color-badge" [style.background-color]="project.color"></span>
+                        <button class="btn-delete" (click)="deleteProject(project.id)">Delete</button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noProjects>
+                <div class="empty-state">
+                    <p>No projects yet. Create your first project!</p>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- Categories Section -->
+        <div class="section">
+            <h2>Categories</h2>
+            <div class="cards-grid" *ngIf="categories.length > 0; else noCategories">
+                <div *ngFor="let category of categories" class="card" [style.border-left-color]="category.color">
+                    <div class="card-header">
+                        <span class="icon">{{ category.icon }}</span>
+                        <h3>{{ category.name }}</h3>
+                    </div>
+                    <p class="description">{{ category.description || 'No description' }}</p>
+                    <div class="card-footer">
+                        <span class="color-badge" [style.background-color]="category.color"></span>
+                        <button class="btn-delete" (click)="deleteCategory(category.id)">Delete</button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noCategories>
+                <div class="empty-state">
+                    <p>No categories yet. Create your first category!</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div class="modal" *ngIf="showProjectModal" (click)="showProjectModal = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <h2>Create New Project</h2>
+            <form (ngSubmit)="createProject()">
+                <div class="form-group">
+                    <label>Project Name</label>
+                    <input type="text" [(ngModel)]="newProject.name" name="name" placeholder="Enter project name"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Description (Optional)</label>
+                    <textarea [(ngModel)]="newProject.description" name="description"
+                        placeholder="Enter description"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <input type="text" [(ngModel)]="newProject.icon" name="icon" placeholder="📁">
+                    </div>
+                    <div class="form-group">
+                        <label>Color</label>
+                        <input type="color" [(ngModel)]="newProject.color" name="color">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" (click)="showProjectModal = false">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal" *ngIf="showCategoryModal" (click)="showCategoryModal = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <h2>Create New Category</h2>
+            <form (ngSubmit)="createCategory()">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" [(ngModel)]="newCategory.name" name="name" placeholder="Enter category name"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Description (Optional)</label>
+                    <textarea [(ngModel)]="newCategory.description" name="description"
+                        placeholder="Enter description"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <input type="text" [(ngModel)]="newCategory.icon" name="icon" placeholder="🏷️">
+                    </div>
+                    <div class="form-group">
+                        <label>Color</label>
+                        <input type="color" [(ngModel)]="newCategory.color" name="color">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" (click)="showCategoryModal = false">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

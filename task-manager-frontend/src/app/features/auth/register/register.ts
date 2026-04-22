@@ -14,6 +14,7 @@ import { NotificationService } from '../../../core/services/notification.service
 })
 export class Register {
 
+  name = '';
   email = '';
   password = '';
   isLoading = false;
@@ -28,6 +29,11 @@ export class Register {
     if (this.isLoading) return;
 
     // Basic validation
+    if (!this.name.trim()) {
+      this.notification.showError('Please enter your full name.');
+      return;
+    }
+
     if (!this.email.trim()) {
       this.notification.showError('Please enter your email address.');
       return;
@@ -45,6 +51,7 @@ export class Register {
 
     this.isLoading = true;
     const payload = {
+      name: this.name.trim(),
       email: this.email.trim(),
       password: this.password
     };

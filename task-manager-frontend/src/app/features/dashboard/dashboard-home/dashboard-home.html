@@ -6,173 +6,186 @@
     </div>
 
     <!-- Dashboard Content -->
-    <div *ngIf="!loading">
-        <!-- Hero Section -->
-        <div class="hero-section animate-fade-in">
-            <div class="greeting">
-                <h1>{{ greeting }}, {{ getUserDisplayName() }} 👋</h1>
-                <p class="date">{{ currentDate | date:'fullDate' }}</p>
+    <div *ngIf="!loading" class="dashboard-content">
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+
+            <!-- Hero Progress Card -->
+            <div class="hero-card">
+                <div class="hero-content">
+                    <div class="greeting-text">{{ greeting }}, {{ getUserDisplayName().toUpperCase() }}</div>
+                    <h1 class="hero-title">You're {{ getCompletionPercentage() }}% through your weekly goal.</h1>
+                    <p class="hero-subtitle">Focus on {{ getTasksRemaining() }} more high-priority tasks to stay ahead
+                        of your schedule.</p>
+                    <button class="roadmap-btn">View Roadmap →</button>
+                </div>
+                <div class="progress-circle">
+                    <div class="circle-container">
+                        <svg class="progress-ring" width="120" height="120">
+                            <circle class="progress-ring-circle" stroke="rgba(255,255,255,0.3)" stroke-width="8"
+                                fill="transparent" r="52" cx="60" cy="60" />
+                            <circle class="progress-ring-circle progress-ring-fill" stroke="white" stroke-width="8"
+                                fill="transparent" r="52" cx="60" cy="60" [style.stroke-dasharray]="326.73"
+                                [style.stroke-dashoffset]="326.73 - (326.73 * getCompletionPercentage()) / 100" />
+                        </svg>
+                        <div class="progress-text">
+                            <span class="progress-percentage">{{ getCompletionPercentage() }}%</span>
+                            <span class="progress-label">EFFICIENCY</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="quick-stats">
-                <div class="stat-card">
-                    <div class="stat-number">{{ tasksToday }}</div>
-                    <div class="stat-label">Tasks Today</div>
+            <!-- Stats Cards -->
+            <div class="stats-row">
+                <div class="stat-card tasks-card">
+                    <div class="stat-icon">
+                        <div class="icon-circle green">
+                            <span>✓</span>
+                        </div>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-change" [class]="getTrendClass()">{{ getCompletionTrend() }}</div>
+                        <div class="stat-label">TASKS TODAY</div>
+                        <div class="stat-number">{{ tasksToday }}</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ completedToday }}</div>
-                    <div class="stat-label">Completed</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ overdueTasks.length }}</div>
-                    <div class="stat-label">Overdue</div>
+
+                <div class="stat-card overdue-card">
+                    <div class="stat-icon">
+                        <div class="icon-circle red">
+                            <span>!</span>
+                        </div>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">OVERDUE</div>
+                        <div class="stat-number">{{ overdueTasks.length }}</div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Quick Add Task -->
+            <div class="quick-add-section">
+                <div class="quick-add-input">
+                    <div class="input-icon">
+                        <span>💭</span>
+                    </div>
+                    <input type="text" [(ngModel)]="newTaskTitle" placeholder="What's next on your mind?"
+                        class="task-input" (keyup.enter)="addQuickTask()">
+                    <div class="input-actions">
+                        <select [(ngModel)]="selectedProjectId" class="select-dropdown" *ngIf="projects.length > 0">
+                            <option [value]="undefined">No Project</option>
+                            <option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</option>
+                        </select>
+                        <select [(ngModel)]="selectedCategoryId" class="select-dropdown" *ngIf="categories.length > 0">
+                            <option [value]="undefined">No Category</option>
+                            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}
+                            </option>
+                        </select>
+                        <button class="send-btn" (click)="addQuickTask()">▶</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Tasks Section -->
+            <div class="tasks-section">
+                <div class="section-header">
+                    <h2 class="section-title">Today's Tasks</h2>
+                    <button class="view-all-btn">View All</button>
+                </div>
+
+                <div class="task-list" *ngIf="todayTasks.length > 0; else noTasksToday">
+                    <div *ngFor="let task of todayTasks.slice(0, 3); trackBy: trackByTaskId" class="task-item"
+                        [class.completed]="task.isCompleted">
+                        <div class="task-checkbox">
+                            <input type="checkbox" [checked]="task.isCompleted" (change)="toggleTask(task.id)"
+                                class="checkbox">
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title">{{ task.title }}</div>
+                            <div class="task-meta">
+                                <span class="task-category">{{ task.project || 'GENERAL TASK' }}</span>
+                                <span class="task-priority" [class]="getPriorityClass(task.priority)">{{ (task.priority
+                                    || 'Medium').toUpperCase() }} PRIORITY</span>
+                                <span class="task-time">{{ task.dueDate | date:'h:mm a' }}</span>
+                            </div>
+                        </div>
+                        <div class="task-avatars">
+                            <div class="avatar">👤</div>
+                            <div class="avatar">👤</div>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-template #noTasksToday>
+                    <div class="empty-state">
+                        <div class="empty-icon">🎉</div>
+                        <p>No tasks for today! Enjoy your day.</p>
+                    </div>
+                </ng-template>
+            </div>
+
+            <!-- New Project Button -->
+            <button class="new-project-btn" (click)="navigateToProjects()">
+                <span class="plus-icon">+</span>
+                New Project
+            </button>
         </div>
 
-        <!-- Quick Add Task -->
-        <div class="quick-add-section animate-slide-up">
-            <div class="quick-add-card">
-                <h3>➕ Add New Task</h3>
-                <div class="quick-add-form">
-                    <input type="text" [(ngModel)]="newTaskTitle" placeholder="What needs to be done?"
-                        class="task-input" (keyup.enter)="addQuickTask()">
-                    <select [(ngModel)]="newTaskPriority" class="priority-select">
-                        <option value="High">High Priority</option>
-                        <option value="Medium">Medium Priority</option>
-                        <option value="Low">Low Priority</option>
-                    </select>
-                    <button (click)="addQuickTask()" class="add-btn" [disabled]="!newTaskTitle.trim()">
-                        Add Task
+        <!-- Sidebar Content Area -->
+        <div class="sidebar-content">
+
+            <!-- Deep Work Session Card -->
+            <div class="deep-work-card">
+                <div class="deep-work-header">
+                    <h3>DEEP WORK SESSION</h3>
+                </div>
+                <div class="timer-container">
+                    <div class="timer-circle">
+                        <svg class="timer-ring" width="140" height="140">
+                            <circle class="timer-ring-bg" stroke="#e5e7eb" stroke-width="6" fill="transparent" r="64"
+                                cx="70" cy="70" />
+                            <circle class="timer-ring-progress" stroke="#6366f1" stroke-width="6" fill="transparent"
+                                r="64" cx="70" cy="70" [style.stroke-dasharray]="402"
+                                [style.stroke-dashoffset]="focusMode.active ? (402 * focusMode.timeRemaining) / focusMode.totalTime : 0" />
+                        </svg>
+                        <div class="timer-text">
+                            <span class="timer-time">{{ getDefaultFocusTime() }}</span>
+                            <span class="timer-label">{{ focusMode.active ? 'ACTIVE' : 'READY' }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timer-controls">
+                    <button class="pause-btn" *ngIf="focusMode.active">⏸ Pause</button>
+                    <button class="stop-btn" (click)="toggleFocusMode()" [class.start]="!focusMode.active">
+                        {{ focusMode.active ? '⏹ Stop' : '▶ Start' }}
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Main Content Grid -->
-        <div class="main-grid">
-
-            <!-- Task Sections -->
-            <div class="tasks-section">
-
-                <!-- Overdue Tasks -->
-                <div class="task-group overdue animate-slide-up" *ngIf="overdueTasks.length > 0">
-                    <h3 class="section-title">🔴 Overdue Tasks</h3>
-                    <div class="task-list">
-                        <div *ngFor="let task of overdueTasks; trackBy: trackByTaskId"
-                            class="task-item overdue-task animate-task-item" [class.completed]="task.isCompleted">
-                            <div class="task-checkbox">
-                                <input type="checkbox" [checked]="task.isCompleted" (change)="toggleTask(task.id)"
-                                    class="checkbox">
-                            </div>
-                            <div class="task-content">
-                                <div class="task-title" [class.completed]="task.isCompleted">{{ task.title }}</div>
-                                <div class="task-meta">
-                                    <span class="priority-badge" [class]="getPriorityClass(task.priority)">
-                                        {{ task.priority }}
-                                    </span>
-                                    <span class="due-date">Due: {{ task.dueDate | date:'short' }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Weekly Progress Chart -->
+            <div class="weekly-progress-card">
+                <div class="progress-header">
+                    <h3>Weekly Progress</h3>
+                    <button class="expand-btn">⤢</button>
                 </div>
-
-                <!-- Today's Tasks -->
-                <div class="task-group today animate-slide-up">
-                    <h3 class="section-title">🟡 Today's Tasks</h3>
-                    <div class="task-list" *ngIf="todayTasks.length > 0; else noTasksToday">
-                        <div *ngFor="let task of todayTasks; trackBy: trackByTaskId"
-                            class="task-item today-task animate-task-item" [class.completed]="task.isCompleted">
-                            <div class="task-checkbox">
-                                <input type="checkbox" [checked]="task.isCompleted" (change)="toggleTask(task.id)"
-                                    class="checkbox">
+                <div class="chart-container">
+                    <div class="chart-bars">
+                        <div *ngFor="let day of dashboardStats.weeklyProgress" class="bar-group">
+                            <div class="bar" [class.active]="day.isToday" [style.height.%]="day.completionRate"
+                                [title]="day.completedTasks + '/' + day.totalTasks + ' tasks completed'">
                             </div>
-                            <div class="task-content">
-                                <div class="task-title" [class.completed]="task.isCompleted">{{ task.title }}</div>
-                                <div class="task-meta">
-                                    <span class="priority-badge" [class]="getPriorityClass(task.priority)">
-                                        {{ task.priority }}
-                                    </span>
-                                    <span class="due-date">Due: {{ task.dueDate | date:'short' }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <ng-template #noTasksToday>
-                        <div class="empty-state">
-                            <div class="empty-icon">🎉</div>
-                            <p>No tasks for today! Enjoy your day.</p>
-                        </div>
-                    </ng-template>
-                </div>
-
-                <!-- Upcoming Tasks -->
-                <div class="task-group upcoming animate-slide-up" *ngIf="upcomingTasks.length > 0">
-                    <h3 class="section-title">🔵 Upcoming Tasks</h3>
-                    <div class="task-list">
-                        <div *ngFor="let task of upcomingTasks; trackBy: trackByTaskId"
-                            class="task-item upcoming-task animate-task-item" [class.completed]="task.isCompleted">
-                            <div class="task-checkbox">
-                                <input type="checkbox" [checked]="task.isCompleted" (change)="toggleTask(task.id)"
-                                    class="checkbox">
-                            </div>
-                            <div class="task-content">
-                                <div class="task-title" [class.completed]="task.isCompleted">{{ task.title }}</div>
-                                <div class="task-meta">
-                                    <span class="priority-badge" [class]="getPriorityClass(task.priority)">
-                                        {{ task.priority }}
-                                    </span>
-                                    <span class="due-date">Due: {{ task.dueDate | date:'short' }}</span>
-                                </div>
-                            </div>
+                            <span class="bar-label">{{ day.dayName }}</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Sidebar -->
-            <div class="sidebar">
-
-                <!-- Focus Mode Card -->
-                <div class="focus-card animate-slide-up">
-                    <h3>🎯 Focus Mode</h3>
-                    <div class="focus-content" *ngIf="!focusMode.active; else activeFocus">
-                        <p class="focus-status">No active session</p>
-                        <button (click)="startFocusMode()" class="focus-btn" [disabled]="todayTasks.length === 0">
-                            Start Focus
-                        </button>
-                    </div>
-                    <ng-template #activeFocus>
-                        <div class="active-focus">
-                            <p class="focus-task">Working on: "{{ focusMode.taskTitle }}"</p>
-                            <div class="focus-timer">⏱ {{ formatTime(focusMode.timeRemaining) }}</div>
-                            <button (click)="stopFocusMode()" class="stop-focus-btn">Stop</button>
-                        </div>
-                    </ng-template>
-                </div>
-
-                <!-- Analytics Preview -->
-                <div class="analytics-card animate-slide-up">
-                    <h3>📈 Progress</h3>
-                    <div class="progress-content">
-                        <p class="progress-text">You completed {{ weeklyProgress }}% of tasks this week</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" [style.width.%]="weeklyProgress"></div>
-                        </div>
-                        <div class="progress-percentage">{{ weeklyProgress }}%</div>
-                    </div>
-                </div>
-
-                <!-- Calendar Preview -->
-                <div class="calendar-card animate-slide-up" *ngIf="upcomingTasks.length > 0">
-                    <h3>📅 Next Up</h3>
-                    <div class="next-task">
-                        <p class="next-task-title">{{ upcomingTasks[0].title }}</p>
-                        <p class="next-task-time">{{ upcomingTasks[0].dueDate | date:'short' }}</p>
-                    </div>
-                </div>
-            </div>
         </div>
+
+        <!-- Floating Action Button -->
+        <button class="fab">
+            <span>+</span>
+        </button>
     </div>
 </div>
